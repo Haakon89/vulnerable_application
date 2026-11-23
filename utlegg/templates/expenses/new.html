@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}New claim{% endblock %}
+{% block content %}
+<h1>New expense claim</h1>
+<form class="card form" method="post" enctype="multipart/form-data">
+  <label>Title <input name="title" value="{{ form.get('title', '') }}" required></label>
+  <div class="row">
+    <label>Category
+      <select name="category">
+        {% for c in categories %}<option {% if form.get('category') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Date <input type="date" name="expense_date" value="{{ form.get('expense_date', '') }}" required></label>
+  </div>
+  <div class="row">
+    <label>Amount <input name="amount" inputmode="decimal" value="{{ form.get('amount', '') }}" required></label>
+    <label>Currency
+      <select name="currency">
+        {% for cur in ['NOK', 'SEK', 'DKK', 'EUR', 'USD'] %}<option>{{ cur }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <label>Description <textarea name="description" rows="3">{{ form.get('description', '') }}</textarea></label>
+
+  <fieldset>
+    <legend>Receipt</legend>
+    <label>Upload a file (image or PDF) <input type="file" name="receipt" accept=".png,.jpg,.jpeg,.gif,.pdf,.svg"></label>
+    <p class="muted">— or —</p>
+    <label>Import from supplier link <input type="url" name="receipt_url" placeholder="https://portal.supplier.no/receipts/12345.pdf"></label>
+  </fieldset>
+
+  <button class="btn btn--primary" type="submit">Submit claim</button>
+</form>
+{% endblock %}

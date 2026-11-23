@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<h1>My profile</h1>
+<div class="grid">
+  <form class="card form" method="post">
+    <h2>Details</h2>
+    <label>Email <input value="{{ user.email }}" disabled></label>
+    <label>Department <input value="{{ user.department }}" disabled></label>
+    <label>Full name <input name="full_name" value="{{ user.full_name }}" required></label>
+    <label>Phone <input name="phone" value="{{ user.phone or '' }}"></label>
+    <label>Bank account (for reimbursements) <input name="bank_account" value="{{ user.bank_account or '' }}"></label>
+    <button class="btn btn--primary" type="submit">Save</button>
+  </form>
+
+  <form class="card form" method="post" action="{{ url_for('profile.change_password') }}">
+    <h2>Change password</h2>
+    <label>Current password <input type="password" name="current" required></label>
+    <label>New password <input type="password" name="new" required minlength="8"></label>
+    <label>Confirm new password <input type="password" name="confirm" required></label>
+    <button class="btn" type="submit">Change password</button>
+  </form>
+</div>
+{% endblock %}

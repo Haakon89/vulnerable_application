@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} · {{ app_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="{{ url_for('index') }}"><span class="brand__mark">U</span> {{ app_name }}</a>
+      {% if session.user_id %}
+      <nav class="nav">
+        <a href="{{ url_for('expenses.list_expenses') }}">My claims</a>
+        <a href="{{ url_for('expenses.new_expense') }}">New claim</a>
+        {% if session.role in ['manager', 'admin'] %}
+        <a href="{{ url_for('expenses.approvals') }}">Approvals</a>
+        {% endif %}
+        {% if session.role == 'admin' %}
+        <a href="{{ url_for('admin.users') }}">Users</a>
+        {% endif %}
+        <span class="nav__sep"></span>
+        <a href="{{ url_for('profile.profile') }}">{{ session.name }}</a>
+        <a href="{{ url_for('auth.logout') }}">Log out</a>
+      </nav>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer container">{{ company_name }} · {{ app_name }} expense claims</footer>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Claim #{{ expense.id }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ expense.title }}</h1>
+  <span class="badge badge--{{ expense.status }}">{{ expense.status }}</span>
+</div>
+
+<div class="grid">
+  <section class="card">
+    <dl class="details">
+      <dt>Claim</dt><dd>#{{ expense.id }}</dd>
+      <dt>Submitted by</dt><dd>{{ expense.owner_name }} ({{ expense.owner_department }})</dd>
+      <dt>Amount</dt><dd><strong>{{ "%.2f"|format(expense.amount|float) }} {{ expense.currency }}</strong></dd>
+      <dt>Category</dt><dd>{{ expense.category }}</dd>
+      <dt>Date</dt><dd>{{ expense.expense_date }}</dd>
+      <dt>Pay to account</dt><dd>{{ expense.owner_bank_account or '—' }}</dd>
+      {% if expense.decided_by_name %}
+      <dt>Decided by</dt><dd>{{ expense.decided_by_name }}</dd>
+      {% endif %}
+    </dl>
+    {% if expense.description %}<p>{{ expense.description }}</p>{% endif %}
+
+    {% if expense.receipt_filename %}
+      <p><a class="btn" href="{{ url_for('expenses.receipt', filename=expense.receipt_filename) }}" target="_blank">View receipt</a></p>
+    {% else %}
+      <p class="muted">No receipt attached.</p>
+    {% endif %}
+
+    {% if session.role in ['manager', 'admin'] and expense.user_id != session.user_id and expense.status == 'pending' %}
+    <div class="actions">
+      <form method="post" action="{{ url_for('expenses.decide', expense_id=expense.id, decision='approve') }}">
+        <button class="btn btn--primary">Approve</button>
+      </form>
+      <form method="post" action="{{ url_for('expenses.decide', expense_id=expense.id, decision='reject') }}">
+        <button class="btn btn--danger">Reject</button>
+      </form>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Comments</h2>
+    {% for c in comments %}
+      <div class="comment">
+        <div class="comment__meta"><strong>{{ c.full_name }}</strong> · {{ c.created_at }}</div>
+        {# keep line breaks people type in comments #}
+        <div class="comment__body">{{ c.body | replace("\n", "<br>") | safe }}</div>
+      </div>
+    {% else %}
+      <p class="muted">No comments yet.</p>
+    {% endfor %}
+    <form method="post" action="{{ url_for('expenses.add_comment', expense_id=expense.id) }}">
+      <textarea name="body" rows="3" placeholder="Add a comment…" required></textarea>
+      <button class="btn" type="submit">Post comment</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

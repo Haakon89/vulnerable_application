@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Approvals{% endblock %}
+{% block content %}
+<h1>Pending approvals — {{ department }}</h1>
+{% if pending %}
+<table class="table">
+  <thead><tr><th>#</th><th>Employee</th><th>Title</th><th>Date</th><th class="num">Amount</th><th></th></tr></thead>
+  <tbody>
+  {% for e in pending %}
+    <tr>
+      <td>{{ e.id }}</td>
+      <td>{{ e.full_name }}</td>
+      <td>{{ e.title }}</td>
+      <td>{{ e.expense_date }}</td>
+      <td class="num">{{ "%.2f"|format(e.amount|float) }} {{ e.currency }}</td>
+      <td><a class="btn btn--small" href="{{ url_for('expenses.view_expense', expense_id=e.id) }}">Review</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Nothing waiting for approval. 🎉</p>
+{% endif %}
+{% endblock %}
