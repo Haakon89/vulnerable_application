@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Users</h1>
+  <a class="btn" href="{{ url_for('admin.export_csv') }}">Export all claims (CSV)</a>
+</div>
+<table class="table">
+  <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Department</th><th>Role</th><th>Created</th></tr></thead>
+  <tbody>
+  {% for u in users %}
+    <tr><td>{{ u.id }}</td><td>{{ u.full_name }}</td><td>{{ u.email }}</td><td>{{ u.department }}</td>
+        <td><span class="badge">{{ u.role }}</span></td><td>{{ u.created_at }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<form class="card form" method="post" action="{{ url_for('admin.create_user') }}">
+  <h2>Add user</h2>
+  <div class="row">
+    <label>Full name <input name="full_name" required></label>
+    <label>Email <input type="email" name="email" required></label>
+  </div>
+  <div class="row">
+    <label>Department <input name="department" placeholder="Sales"></label>
+    <label>Role
+      <select name="role">{% for r in roles %}<option>{{ r }}</option>{% endfor %}</select>
+    </label>
+  </div>
+  <label>Temporary password <input type="password" name="password" required></label>
+  <button class="btn btn--primary" type="submit">Create user</button>
+</form>
+{% endblock %}

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.db
+.venv/
+venv/
+utlegg/uploads/
+.env
+# macOS / Windows metadata
+._*
+.DS_Store
+Thumbs.db
+desktop.ini

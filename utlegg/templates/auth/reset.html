@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Choose a new password{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Choose a new password</h1>
+  <p class="muted">For {{ email }}</p>
+  <form method="post">
+    <label>New password <input type="password" name="password" required autofocus></label>
+    <label>Confirm password <input type="password" name="confirm" required></label>
+    <button class="btn btn--primary" type="submit">Update password</button>
+  </form>
+</div>
+{% endblock %}

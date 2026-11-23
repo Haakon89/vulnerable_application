@@ -1,0 +1,39 @@
+# Utlegg – local lab environment
+# WARNING: this application is intentionally vulnerable.
+# The web port is bound to 127.0.0.1 only. Do not change it to 0.0.0.0 or expose it to the internet.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: utlegg
+      POSTGRES_PASSWORD: utlegg
+      POSTGRES_DB: utlegg
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U utlegg"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: .
+    command: sh -c "flask --app utlegg init-db && flask --app utlegg run --host 0.0.0.0 --port 5000 --debug"
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      DATABASE_URL: postgresql://utlegg:utlegg@db:5432/utlegg
+      UTLEGG_SMTP_HOST: smtp.nordvik.test
+      UTLEGG_SMTP_USER: noreply@nordvik.test
+      UTLEGG_SMTP_PASSWORD: "Sm7p-Nordvik-2024!"
+      UTLEGG_ACCOUNTING_API_KEY: "acct_live_4f9c2e7b1a8d6035"
+    volumes:
+      - uploads:/app/utlegg/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:

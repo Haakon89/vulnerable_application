@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Log in</h1>
+  <p class="muted">Expense claims for {{ company_name }} employees.</p>
+  <form method="post">
+    <label>Email <input type="email" name="email" required autofocus></label>
+    <label>Password <input type="password" name="password" required></label>
+    <button class="btn btn--primary" type="submit">Log in</button>
+  </form>
+  <p><a href="{{ url_for('auth.forgot_password') }}">Forgot your password?</a></p>
+</div>
+{% endblock %}
